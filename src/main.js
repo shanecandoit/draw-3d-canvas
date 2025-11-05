@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { Toolbar } from './toolbar.js';
 
 // Scene
 const scene = new THREE.Scene();
@@ -14,7 +15,7 @@ scene.add(gridHelper);
 
 // Object
 const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const material = new THREE.MeshBasicMaterial({ color: 0x808080 });
 const mesh = new THREE.Mesh(geometry, material);
 mesh.position.y = 0.5; // Place cube on grid
 scene.add(mesh);
@@ -52,6 +53,23 @@ controls.mouseButtons = {
     MIDDLE: THREE.MOUSE.DOLLY, // Middle click to zoom
     RIGHT: THREE.MOUSE.PAN     // Right click to pan
 };
+
+// Toolbar
+let currentTool = 'pan';
+const toolbar = new Toolbar((tool) => {
+    currentTool = tool;
+    
+    // Update controls based on tool
+    if (tool === 'pan') {
+        controls.enabled = true;
+        renderer.domElement.style.cursor = 'grab';
+    } else {
+        controls.enabled = false;
+        renderer.domElement.style.cursor = 'crosshair';
+    }
+    
+    console.log(`Active tool: ${tool}`);
+});
 
 // Debug UI
 const debugInfo = document.createElement('div');
